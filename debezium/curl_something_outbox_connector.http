@@ -1,0 +1,63 @@
+###
+
+# curl --location --request POST 'http://localhost:8083/connectors/'
+#--header 'Content-Type: application/json'
+#--data-raw '
+#{
+#  "name": "something-outbox-connector",
+#  "config": {
+#    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+#    "tasks.max": "1",
+#    "database.hostname": "localhost",
+#    "database.port": "5432",
+#    "database.user": "root",
+#    "database.password": "root",
+#    "database.dbname": "something",
+#    "database.server.name": "dbserver1",
+#    "tombstones.on.delete": "false",
+#    "table.whitelist" : "public.outbox",
+#    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+#    "value.converter": "org.apache.kafka.connect.storage.StringConverter",
+#    "transforms": "outbox",
+#    "transforms.outbox.type": "io.debezium.transforms.outbox.EventRouter"
+#  }
+#}'
+POST http://localhost:8083/connectors/
+Content-Type: application/json
+
+{
+  "name": "something-outbox-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "slot.name" : "something",
+    "tasks.max": "1",
+    "plugin.name": "pgoutput",
+    "database.hostname": "postgres",
+    "database.port": "5432",
+    "database.user": "root",
+    "database.password": "root",
+    "database.dbname": "something",
+    "database.server.name": "localhost",
+    "schema.include.list": "public",
+    "table.include.list": "public.outbox",
+    "tombstones.on.delete": "false",
+    "table.whitelist" : "public.outbox",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "transforms": "outbox",
+    "transforms.outbox.type": "io.debezium.transforms.outbox.EventRouter",
+    "poll.interval.ms": "100"
+  }
+}
+
+###
+
+---
+
+###
+
+# curl -i -X DELETE http://localhost:8083/connectors/something-outbox-connector/
+DELETE http://localhost:8083/connectors/something-outbox-connector/
+
+###
+

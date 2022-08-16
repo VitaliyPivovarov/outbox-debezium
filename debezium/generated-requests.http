@@ -1,0 +1,14 @@
+POST http://localhost:8888/gateway/something
+Content-Type: application/json
+
+{
+  "name": "test"
+}
+
+###
+PUT http://localhost:8888/gateway/something/fd1bb3e6-3e31-4b21-a462-3b0c5c100f04
+Content-Type: application/json
+
+{
+  "name": "HELLO!!!"
+}

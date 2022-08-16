@@ -1,0 +1,32 @@
+server:
+  port: ${SERVER_PORT:8888}
+  error:
+    include-message: always
+
+spring:
+
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  main:
+    allow-bean-definition-overriding: true
+
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST_NAME:localhost}:${POSTGRES_PORT:5432}/something
+    username: ${POSTGRES_USER:root}
+    password: ${POSTGRES_PASSWORD:root}
+
+  jpa:
+    open-in-view: false
+    show_sql: false
+
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST_NAME:kafka}:${KAFKA_PORT:9092}
+    consumer:
+      group-id:  ${SOMETHING_KAFKA_CONSUMER:something_consumer}
+
+outbox:
+  listen:
+    something:
+      event: ${OUTBOX_SOMETHING_EVENT:something}

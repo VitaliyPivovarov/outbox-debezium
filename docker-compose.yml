@@ -1,0 +1,52 @@
+version: "3"
+services:
+
+  zookeeper:
+    image: debezium/zookeeper:1.9
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+      - "2888:2888"
+      - "3888:3888"
+
+  kafka:
+    image: debezium/kafka:1.9
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      - ZOOKEEPER_CONNECT=zookeeper:2181
+      - HOST_NAME=kafka
+    depends_on:
+      - zookeeper
+
+  postgres:
+    image: postgres:14.3
+    logging:
+      options:
+        max-size: "10m"
+    container_name: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+
+  debezium:
+    image: debezium/connect:1.9
+    container_name: debezium
+    ports:
+      - "8083:8083"
+    links:
+      - kafka
+      - postgres
+    environment:
+      - BOOTSTRAP_SERVERS=kafka:9092
+      - GROUP_ID=debezuim
+      - CONFIG_STORAGE_TOPIC=debezium_connect_configs
+      - OFFSET_STORAGE_TOPIC=debezium_connect_offsets
+      - STATUS_STORAGE_TOPIC=debezium_source_connect_statuses
